@@ -30,6 +30,7 @@ Distributed as-is; no warranty is given.
 static MicroBitI2C i2c(I2C_SDA0, I2C_SCL0);
 
 //Register names:
+/*
 static const char BME280_ADDRESS			=		0xEE;
 static const char BME280_DIG_T1_LSB_REG		=	0x88;
 static const char BME280_DIG_T1_MSB_REG		=	0x89;
@@ -77,8 +78,8 @@ static const char BME280_TEMPERATURE_LSB_REG=	0xFB; //Temperature LSB
 static const char BME280_TEMPERATURE_XLSB_REG=	0xFC; //Temperature XLSB
 static const char BME280_HUMIDITY_MSB_REG	=	0xFD; //Humidity MSB
 static const char BME280_HUMIDITY_LSB_REG	=	0xFE; //Humidity LSB
-
-static const char CCS811_ADDRESS			=		0xB6;
+*/
+static const char CCS811_ADDRESS=0x5A;
 static const char CCS811_STATUS= 0x00;
 static const char CCS811_MEAS_MODE =0x01;
 static const char CCS811_ALG_RESULT_DATA =0x02;
@@ -134,7 +135,7 @@ struct SensorCalibration
 	int16_t dig_H5;
 	int8_t dig_H6;
 };
-
+/*
 SensorCalibration calibration;	
 uint8_t BMErunMode;
 uint8_t BMEtStandby;
@@ -143,7 +144,7 @@ uint8_t BMEtempOverSample;
 uint8_t BMEpressOverSample;
 uint8_t BMEhumidOverSample;
 float BMEtempCorrection;
-
+*/
 //****************************************************************************//
 //
 //  BMEsettings and configuration
@@ -168,6 +169,7 @@ environment::environment( void )
 //****************************************************************************//
 void environment::begin()
 {
+	/*
 	BMErunMode = 3; //Normal/Run
 	BMEtStandby = 0; //0.5ms
 	BMEfilter = 0; //Filter off
@@ -208,7 +210,7 @@ void environment::begin()
 	setTempOverSample(BMEhumidOverSample); //Default of 1x oversample
 	
 	setMode(BMErunMode); //Go!
-	
+	*/
 	uint8_t data[4] = {0x11,0xE5,0x72,0x8A}; //Reset key
 	
 	readRegister(CCS811_ADDRESS, CCS811_HW_ID);
@@ -340,10 +342,10 @@ void environment::setStandbyTime(uint8_t timeSetting)
 {
 	if(timeSetting > 0b111) timeSetting = 0; //Error check. Default to 0.5ms
 	
-	uint8_t controlData = readRegister(BME280_ADDRESS, BME280_CONFIG_REG);
+/*	uint8_t controlData = readRegister(BME280_ADDRESS, BME280_CONFIG_REG);
 	controlData &= ~( (1<<7) | (1<<6) | (1<<5) ); //Clear the 7/6/5 bits
 	controlData |= (timeSetting << 5); //Align with bits 7/6/5
-	writeRegister(BME280_ADDRESS, BME280_CONFIG_REG, controlData);
+	writeRegister(BME280_ADDRESS, BME280_CONFIG_REG, controlData);*/
 }
 
 //Set the filter bits in the config register
@@ -357,10 +359,10 @@ void environment::setFilter(uint8_t filterSetting)
 {
 	if(filterSetting > 0b111) filterSetting = 0; //Error check. Default to filter off
 	
-	uint8_t controlData = readRegister(BME280_ADDRESS, BME280_CONFIG_REG);
+/*	uint8_t controlData = readRegister(BME280_ADDRESS, BME280_CONFIG_REG);
 	controlData &= ~( (1<<4) | (1<<3) | (1<<2) ); //Clear the 4/3/2 bits
 	controlData |= (filterSetting << 2); //Align with bits 4/3/2
-	writeRegister(BME280_ADDRESS, BME280_CONFIG_REG, controlData);
+	writeRegister(BME280_ADDRESS, BME280_CONFIG_REG, controlData);*/
 }
 
 //Set the temperature oversample value
@@ -368,7 +370,7 @@ void environment::setFilter(uint8_t filterSetting)
 //1 to 16 are valid over sampling values
 void environment::setTempOverSample(uint8_t overSampleAmount)
 {
-	overSampleAmount = checkSampleValue(overSampleAmount); //Error check
+/*	overSampleAmount = checkSampleValue(overSampleAmount); //Error check
 	
 	uint8_t originalMode = getMode(); //Get the current mode so we can go back to it at the end
 	
@@ -380,7 +382,7 @@ void environment::setTempOverSample(uint8_t overSampleAmount)
 	controlData |= overSampleAmount << 5; //Align overSampleAmount to bits 7/6/5
 	writeRegister(BME280_ADDRESS, BME280_CTRL_MEAS_REG, controlData);
 	
-	setMode(originalMode); //Return to the original user's choice
+	setMode(originalMode); //Return to the original user's choice*/
 }
 
 //Set the pressure oversample value
@@ -388,7 +390,7 @@ void environment::setTempOverSample(uint8_t overSampleAmount)
 //1 to 16 are valid over sampling values
 void environment::setPressureOverSample(uint8_t overSampleAmount)
 {
-	overSampleAmount = checkSampleValue(overSampleAmount); //Error check
+/*	overSampleAmount = checkSampleValue(overSampleAmount); //Error check
 	
 	uint8_t originalMode = getMode(); //Get the current mode so we can go back to it at the end
 	
@@ -400,7 +402,7 @@ void environment::setPressureOverSample(uint8_t overSampleAmount)
 	controlData |= overSampleAmount << 2; //Align overSampleAmount to bits 4/3/2
 	writeRegister(BME280_ADDRESS, BME280_CTRL_MEAS_REG, controlData);
 	
-	setMode(originalMode); //Return to the original user's choice
+	setMode(originalMode); //Return to the original user's choice*/
 }
 
 //Set the humidity oversample value
@@ -408,7 +410,7 @@ void environment::setPressureOverSample(uint8_t overSampleAmount)
 //1 to 16 are valid over sampling values
 void environment::setHumidityOverSample(uint8_t overSampleAmount)
 {
-	overSampleAmount = checkSampleValue(overSampleAmount); //Error check
+/*	overSampleAmount = checkSampleValue(overSampleAmount); //Error check
 	
 	uint8_t originalMode = getMode(); //Get the current mode so we can go back to it at the end
 	
@@ -420,7 +422,7 @@ void environment::setHumidityOverSample(uint8_t overSampleAmount)
 	controlData |= overSampleAmount << 0; //Align overSampleAmount to bits 2/1/0
 	writeRegister(BME280_ADDRESS, BME280_CTRL_HUMIDITY_REG, controlData);
 
-	setMode(originalMode); //Return to the original user's choice
+	setMode(originalMode); //Return to the original user's choice*/
 }
 
 //Validates an over sample value
@@ -457,14 +459,14 @@ uint8_t environment::checkSampleValue(uint8_t userValue)
 //Check the measuring bit and return true while device is taking measurement
 bool environment::isMeasuring(void)
 {
-	uint8_t stat = readRegister(BME280_ADDRESS, BME280_STAT_REG);
-	return(stat & (1<<3)); //If the measuring bit (3) is set, return true
+/*	uint8_t stat = readRegister(BME280_ADDRESS, BME280_STAT_REG);
+	return(stat & (1<<3)); //If the measuring bit (3) is set, return true*/
 }
 
 //Strictly resets.  Run .begin() afterwards
 void environment::reset( void )
 {
-	writeRegister(BME280_ADDRESS, BME280_RST_REG, 0xB6);
+	/*writeRegister(BME280_ADDRESS, BME280_RST_REG, 0xB6);*/
 	
 }
 
@@ -478,7 +480,7 @@ float environment::readFloatPressure( void )
 
 	// Returns pressure in Pa as unsigned 32 bit integer in Q24.8 format (24 integer bits and 8 fractional bits).
 	// Output value of “24674867” represents 24674867/256 = 96386.2 Pa = 963.862 hPa
-    uint8_t buffer[3];
+/*    uint8_t buffer[3];
 	readRegisterRegion(BME280_ADDRESS, &buffer[0], BME280_PRESSURE_MSB_REG, 3);
     int32_t adc_P = ((uint32_t)buffer[0] << 12) | ((uint32_t)buffer[1] << 4) | ((buffer[2] >> 4) & 0x0F);
 	
@@ -500,7 +502,7 @@ float environment::readFloatPressure( void )
 	p_acc = ((p_acc + var1 + var2) >> 8) + (((int64_t)calibration.dig_P7)<<4);
 	
 	pressure = (float)p_acc / 256.0;
-	return pressure;
+	return pressure;*/
 	
 }
 
@@ -573,7 +575,7 @@ float environment::readTempC( void )
 	// t_fine carries fine temperature as global value
 
 	//get the reading (adc_T);
-    uint8_t buffer[3];
+/*    uint8_t buffer[3];
 	readRegisterRegion(BME280_ADDRESS, buffer, BME280_TEMPERATURE_MSB_REG, 3);
     int32_t adc_T = ((uint32_t)buffer[0] << 12) | ((uint32_t)buffer[1] << 4) | ((buffer[2] >> 4) & 0x0F);
 
@@ -588,7 +590,7 @@ float environment::readTempC( void )
 
 	output = output / 100 + BMEtempCorrection;
 	
-	return output;
+	return output;*/
 }
 
 float environment::readTempF( void )
